@@ -14,30 +14,28 @@ class App:
     ):
         self.browser = browser
         self.ignore_https_errors = ignore_https_errors
-        self.context = self.browser.new_context(
-            ignore_https_errors=ignore_https_errors, **kwargs
-        )
+        self.context = self.browser.new_context(ignore_https_errors=ignore_https_errors, **kwargs)
         self.page = self.context.new_page()
         self.base_url = base_url
         self.login_page = LoginPage(self.page)
         self.report_page = ReportPage(self.page)
 
-        def console_handler(message: ConsoleMessage):
-            if message.type == "error":
-                logging.error(f"page: {self.page.url}, console error: {message.text}")
+        # def console_handler(message: ConsoleMessage):
+        #     if message.type == "error":
+        #         logging.error(f"page: {self.page.url}, console error: {message.text}")
+        #
+        # def dialog_handler(dialog: Dialog):
+        #     logging.warning(f"page: {self.page.url}, dialog text: {dialog.message}")
+        #     dialog.accept()
+        #
+        # self.page.on("console", console_handler)
+        # self.page.on("dialog", dialog_handler)
 
-        def dialog_handler(dialog: Dialog):
-            logging.warning(f"page: {self.page.url}, dialog text: {dialog.message}")
-            dialog.accept()
-
-        self.page.on("console", console_handler)
-        self.page.on("dialog", dialog_handler)
-
-    def trace(self):
-        self.context.tracing.start(screenshots=True, snapshots=True, sources=True)
-
-    def trace_stop(self):
-        self.context.tracing.stop(path="trace.zip")
+    # def trace(self):
+    #     self.context.tracing.start(screenshots=True, snapshots=True, sources=True)
+    #
+    # def trace_stop(self):
+    #     self.context.tracing.stop(path="trace.zip")
 
     def goto(self, endpoint: str, use_base_url=True):
         if use_base_url:
@@ -55,9 +53,7 @@ class App:
         self.page.locator("//button[@class='si si-button']").click()
 
     def choice_language(self, lang: str):
-        self.page.click(
-            f"label[class='si si-label si-combobox__input'] span[class='si si-label__text']"
-        )
+        self.page.click(f"label[class='si si-label si-combobox__input'] span[class='si si-label__text']")
         self.page.click(f"text={lang}")
 
     def close(self):
